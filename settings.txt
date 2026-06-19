@@ -1,0 +1,8 @@
+difficulty=hard
+theme=purple
+music_volume=0.05333333333333334
+sfx_volume=0.7266666666666667
+round_time=Бесконечно
+target_score=До 2
+ball_color=Жёлтый
+language=ru
