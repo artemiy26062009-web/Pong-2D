@@ -22,6 +22,7 @@ class UIManager:
         self.font_rules = pygame.font.SysFont("Arial", 30)
         self.font_rules_small = pygame.font.SysFont("Arial", 24)
         self.font_achieve = pygame.font.SysFont("Arial", 26)
+        self.font_arrows = pygame.font.SysFont("Arial", 28)
 
         self.bg_balls = []
         for _ in range(20):
@@ -110,19 +111,40 @@ class UIManager:
         surf = font.render(text, True, c)
         self.screen.blit(surf, (rect.centerx - surf.get_width() // 2, rect.centery - surf.get_height() // 2))
 
-    def _draw_box(self, rect, text, value, color=YELLOW):
+    def _draw_setting_box(self, rect, text, value, mx, my, color=YELLOW):
+        """
+        Рисует оболочку настройки со стрелками ◄ ► внутри.
+        Возвращает: "left" если мышь над левой стрелкой, "right" если над правой, иначе None
+        """
         pygame.draw.rect(self.screen, (25, 25, 45), rect, border_radius=8)
         pygame.draw.rect(self.screen, (60, 60, 100), rect, 2, border_radius=8)
+
+        # Левая стрелка ◄
+        l_rect = pygame.Rect(rect.left + 5, rect.centery - 14, 28, 28)
+        l_hover = l_rect.collidepoint(mx, my)
+        l_color = YELLOW if l_hover else (120, 120, 160)
+        l_surf = self.font_arrows.render("◄", True, l_color)
+        self.screen.blit(l_surf, (l_rect.centerx - l_surf.get_width() // 2, l_rect.centery - l_surf.get_height() // 2))
+
+        # Текст по центру
         s = self.font_small.render(f"{text}  {value}", True, color)
         self.screen.blit(s, (rect.centerx - s.get_width() // 2, rect.centery - s.get_height() // 2))
+
+        # Правая стрелка ►
+        r_rect = pygame.Rect(rect.right - 33, rect.centery - 14, 28, 28)
+        r_hover = r_rect.collidepoint(mx, my)
+        r_color = YELLOW if r_hover else (120, 120, 160)
+        r_surf = self.font_arrows.render("►", True, r_color)
+        self.screen.blit(r_surf, (r_rect.centerx - r_surf.get_width() // 2, r_rect.centery - r_surf.get_height() // 2))
+
+        # Возвращаем что нажато
+        if l_hover: return "left"
+        if r_hover: return "right"
+        return None
 
     def _draw_scroll_arrows(self, up_rect, down_rect, mx, my):
         self._draw_button("▲", up_rect, up_rect.collidepoint(mx, my), YELLOW, True)
         self._draw_button("▼", down_rect, down_rect.collidepoint(mx, my), YELLOW, True)
-
-    def _draw_lr_arrows(self, left_rect, right_rect, mx, my):
-        self._draw_button("◄", left_rect, left_rect.collidepoint(mx, my), YELLOW, True)
-        self._draw_button("►", right_rect, right_rect.collidepoint(mx, my), YELLOW, True)
 
     def _draw_title(self, text, y=40):
         surf = self.font_title.render(text, True, YELLOW)
@@ -278,30 +300,18 @@ class UIManager:
         up_btn = pygame.Rect(WIDTH - 60, margin, 40, 40)
         down_btn = pygame.Rect(WIDTH - 60, HEIGHT - margin - 40, 40, 40)
 
-        box_w = 460;
-        arrow_w = 35;
-        arrow_gap = 25
+        box_w = 480
 
         diff_rects = [pygame.Rect(WIDTH // 2 - box_w // 2, 108 + i * 60, box_w, 50) for i in range(4)]
 
-        t_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 368, box_w, 38)
-        t_left = pygame.Rect(t_rect.centerx - arrow_w - box_w // 2 - arrow_gap, t_rect.centery - 19, arrow_w, 38)
-        t_right = pygame.Rect(t_rect.centerx + box_w // 2 + arrow_gap, t_rect.centery - 19, arrow_w, 38)
+        # Оболочки настроек (без отдельных треугольников)
+        t_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 368, box_w, 40)
+        s_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 418, box_w, 40)
+        th_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 468, box_w, 40)
+        b_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 518, box_w, 40)
 
-        s_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 416, box_w, 38)
-        s_left = pygame.Rect(s_rect.centerx - arrow_w - box_w // 2 - arrow_gap, s_rect.centery - 19, arrow_w, 38)
-        s_right = pygame.Rect(s_rect.centerx + box_w // 2 + arrow_gap, s_rect.centery - 19, arrow_w, 38)
-
-        th_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 464, box_w, 38)
-        th_left = pygame.Rect(th_rect.centerx - arrow_w - box_w // 2 - arrow_gap, th_rect.centery - 19, arrow_w, 38)
-        th_right = pygame.Rect(th_rect.centerx + box_w // 2 + arrow_gap, th_rect.centery - 19, arrow_w, 38)
-
-        b_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 512, box_w, 38)
-        b_left = pygame.Rect(b_rect.centerx - arrow_w - box_w // 2 - arrow_gap, b_rect.centery - 19, arrow_w, 38)
-        b_right = pygame.Rect(b_rect.centerx + box_w // 2 + arrow_gap, b_rect.centery - 19, arrow_w, 38)
-
-        start_btn = pygame.Rect(WIDTH // 2 - 180, 575, 360, 55)
-        back_btn = pygame.Rect(WIDTH // 2 - 180, 640, 360, 55)
+        start_btn = pygame.Rect(WIDTH // 2 - 180, 580, 360, 55)
+        back_btn = pygame.Rect(WIDTH // 2 - 180, 645, 360, 55)
 
         desc = {
             "easy": self.L("Медленный ИИ, часто ошибается (мяч медленно ускоряется)", "Slow AI, often mistakes"),
@@ -316,7 +326,7 @@ class UIManager:
         def draw():
             self._draw_title(self.L("ИГРА С КОМПЬЮТЕРОМ", "PLAYER vs COMPUTER"), 1)
             dn = DIFFICULTY_SETTINGS[self.difficulty]['name_' + self.language].upper()
-            self._draw_subtitle(self.L(f"СЛОЖНОСТЬ: {dn}", f"DIFFICULTY: {dn}"), 65, (255, 100, 100))
+            self._draw_subtitle(self.L(f"СЛОЖНОСТЬ: {dn}", f"DIFFICULTY: {dn}"), 5, (255, 100, 100))
 
             for i in range(scroll, min(scroll + per, len(dnames))):
                 diff = dnames[i]
@@ -328,13 +338,16 @@ class UIManager:
                 self.screen.blit(name_s, (r.centerx - name_s.get_width() // 2, r.y + 2))
                 self.screen.blit(desc_s, (r.centerx - desc_s.get_width() // 2, r.y + 25))
 
-            self._draw_box(t_rect, self.L("Время раунда:", "Round time:"), self.round_time)
-            self._draw_box(s_rect, self.L("Игра до:", "Play to:"), self.target_score)
-            self._draw_box(th_rect, self.L("Тема стола:", "Table theme:"), THEMES[self.theme]["name"])
-            self._draw_box(b_rect, self.L("Цвет мяча:", "Ball color:"), self.ball_color)
-
         while True:
             mx, my = pygame.mouse.get_pos()
+
+            # Отрисовка оболочек со стрелками (получаем что нажато)
+            t_action = self._draw_setting_box(t_rect, self.L("Время раунда:", "Round time:"), self.round_time, mx, my)
+            s_action = self._draw_setting_box(s_rect, self.L("Игра до:", "Play to:"), self.target_score, mx, my)
+            th_action = self._draw_setting_box(th_rect, self.L("Тема стола:", "Table theme:"),
+                                               THEMES[self.theme]["name"], mx, my)
+            b_action = self._draw_setting_box(b_rect, self.L("Цвет мяча:", "Ball color:"), self.ball_color, mx, my)
+
             for ev in pygame.event.get():
                 if ev.type == pygame.QUIT: return
                 if ev.type == pygame.KEYDOWN:
@@ -355,30 +368,32 @@ class UIManager:
                             scroll = max(scroll - 1, 0)
                         elif down_btn.collidepoint(mx, my):
                             scroll = min(scroll + 1, max_scroll)
+                        # Сложности
                         for i in range(scroll, min(scroll + per, len(dnames))):
                             if diff_rects[i - scroll].collidepoint(mx, my): self.difficulty = dnames[i]
-                        if t_left.collidepoint(mx, my):
+                        # Настройки через стрелки
+                        if t_action == "left":
                             idx = (tnames.index(self.round_time) - 1) % len(tnames);
                             self.round_time = tnames[idx]
-                        elif t_right.collidepoint(mx, my):
+                        elif t_action == "right":
                             idx = (tnames.index(self.round_time) + 1) % len(tnames);
                             self.round_time = tnames[idx]
-                        elif s_left.collidepoint(mx, my):
+                        elif s_action == "left":
                             idx = (snames.index(self.target_score) - 1) % len(snames);
                             self.target_score = snames[idx]
-                        elif s_right.collidepoint(mx, my):
+                        elif s_action == "right":
                             idx = (snames.index(self.target_score) + 1) % len(snames);
                             self.target_score = snames[idx]
-                        elif th_left.collidepoint(mx, my):
+                        elif th_action == "left":
                             idx = (thnames.index(self.theme) - 1) % len(thnames);
                             self.theme = thnames[idx]
-                        elif th_right.collidepoint(mx, my):
+                        elif th_action == "right":
                             idx = (thnames.index(self.theme) + 1) % len(thnames);
                             self.theme = thnames[idx]
-                        elif b_left.collidepoint(mx, my):
+                        elif b_action == "left":
                             idx = (bnames.index(self.ball_color) - 1) % len(bnames);
                             self.ball_color = bnames[idx]
-                        elif b_right.collidepoint(mx, my):
+                        elif b_action == "right":
                             idx = (bnames.index(self.ball_color) + 1) % len(bnames);
                             self.ball_color = bnames[idx]
                         elif start_btn.collidepoint(mx, my):
@@ -389,13 +404,28 @@ class UIManager:
                         elif back_btn.collidepoint(mx, my):
                             return
 
-            self._draw_bg();
-            draw()
+            # Дорисовываем всё остальное
+            self._draw_bg()
+            self._draw_title(self.L("ИГРА С КОМПЬЮТЕРОМ", "PLAYER vs COMPUTER"), 10)
+            dn = DIFFICULTY_SETTINGS[self.difficulty]['name_' + self.language].upper()
+            self._draw_subtitle(self.L(f"СЛОЖНОСТЬ: {dn}", f"DIFFICULTY: {dn}"), 60, (255, 100, 100))
+
+            for i in range(scroll, min(scroll + per, len(dnames))):
+                diff = dnames[i]
+                r = diff_rects[i - scroll]
+                pygame.draw.rect(self.screen, (25, 25, 45), r, border_radius=8)
+                pygame.draw.rect(self.screen, dcol[diff], r, 2, border_radius=8)
+                name_s = self.font_small.render(DIFFICULTY_SETTINGS[diff]["name_" + self.language], True, dcol[diff])
+                desc_s = self.font_tiny.render(desc[diff], True, (180, 180, 200))
+                self.screen.blit(name_s, (r.centerx - name_s.get_width() // 2, r.y + 2))
+                self.screen.blit(desc_s, (r.centerx - desc_s.get_width() // 2, r.y + 25))
+
+            self._draw_setting_box(t_rect, self.L("Время раунда:", "Round time:"), self.round_time, mx, my)
+            self._draw_setting_box(s_rect, self.L("Игра до:", "Play to:"), self.target_score, mx, my)
+            self._draw_setting_box(th_rect, self.L("Тема стола:", "Table theme:"), THEMES[self.theme]["name"], mx, my)
+            self._draw_setting_box(b_rect, self.L("Цвет мяча:", "Ball color:"), self.ball_color, mx, my)
+
             self._draw_scroll_arrows(up_btn, down_btn, mx, my)
-            self._draw_lr_arrows(t_left, t_right, mx, my)
-            self._draw_lr_arrows(s_left, s_right, mx, my)
-            self._draw_lr_arrows(th_left, th_right, mx, my)
-            self._draw_lr_arrows(b_left, b_right, mx, my)
             self._draw_button(self.L("СТАРТ", "START"), start_btn, start_btn.collidepoint(mx, my), (100, 255, 100))
             self._draw_button(self.L("НАЗАД", "BACK"), back_btn, back_btn.collidepoint(mx, my), (255, 100, 100))
             pygame.display.flip();
@@ -408,25 +438,12 @@ class UIManager:
         bnames = list(BALL_COLORS.keys());
         snames = list(TARGET_SCORES.keys())
 
-        box_w = 460;
-        arrow_w = 35;
-        arrow_gap = 25
+        box_w = 480
 
-        t_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 220, box_w, 38)
-        t_left = pygame.Rect(t_rect.centerx - arrow_w - box_w // 2 - arrow_gap, t_rect.centery - 19, arrow_w, 38)
-        t_right = pygame.Rect(t_rect.centerx + box_w // 2 + arrow_gap, t_rect.centery - 19, arrow_w, 38)
-
-        s_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 270, box_w, 38)
-        s_left = pygame.Rect(s_rect.centerx - arrow_w - box_w // 2 - arrow_gap, s_rect.centery - 19, arrow_w, 38)
-        s_right = pygame.Rect(s_rect.centerx + box_w // 2 + arrow_gap, s_rect.centery - 19, arrow_w, 38)
-
-        th_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 320, box_w, 38)
-        th_left = pygame.Rect(th_rect.centerx - arrow_w - box_w // 2 - arrow_gap, th_rect.centery - 19, arrow_w, 38)
-        th_right = pygame.Rect(th_rect.centerx + box_w // 2 + arrow_gap, th_rect.centery - 19, arrow_w, 38)
-
-        b_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 370, box_w, 38)
-        b_left = pygame.Rect(b_rect.centerx - arrow_w - box_w // 2 - arrow_gap, b_rect.centery - 19, arrow_w, 38)
-        b_right = pygame.Rect(b_rect.centerx + box_w // 2 + arrow_gap, b_rect.centery - 19, arrow_w, 38)
+        t_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 220, box_w, 40)
+        s_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 270, box_w, 40)
+        th_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 320, box_w, 40)
+        b_rect = pygame.Rect(WIDTH // 2 - box_w // 2, 370, box_w, 40)
 
         start_btn = pygame.Rect(WIDTH // 2 - 180, 450, 360, 55)
         back_btn = pygame.Rect(WIDTH // 2 - 180, 520, 360, 55)
@@ -436,13 +453,16 @@ class UIManager:
             c = self.L("Левый: W/S | Правый: Стрелки ВВЕРХ/ВНИЗ", "Left: W/S | Right: ARROWS UP/DOWN")
             s = self.font_small.render(c, True, (180, 180, 200))
             self.screen.blit(s, (WIDTH // 2 - s.get_width() // 2, 130))
-            self._draw_box(t_rect, self.L("Время раунда:", "Round time:"), self.round_time)
-            self._draw_box(s_rect, self.L("Игра до:", "Play to:"), self.target_score)
-            self._draw_box(th_rect, self.L("Тема стола:", "Table theme:"), THEMES[self.theme]["name"])
-            self._draw_box(b_rect, self.L("Цвет мяча:", "Ball color:"), self.ball_color)
 
         while True:
             mx, my = pygame.mouse.get_pos()
+
+            t_action = self._draw_setting_box(t_rect, self.L("Время раунда:", "Round time:"), self.round_time, mx, my)
+            s_action = self._draw_setting_box(s_rect, self.L("Игра до:", "Play to:"), self.target_score, mx, my)
+            th_action = self._draw_setting_box(th_rect, self.L("Тема стола:", "Table theme:"),
+                                               THEMES[self.theme]["name"], mx, my)
+            b_action = self._draw_setting_box(b_rect, self.L("Цвет мяча:", "Ball color:"), self.ball_color, mx, my)
+
             for ev in pygame.event.get():
                 if ev.type == pygame.QUIT: return
                 if ev.type == pygame.KEYDOWN:
@@ -453,28 +473,28 @@ class UIManager:
                              "pvp", self.round_time, self.target_score, self.ball_color, self.language).run()
                         return
                 if ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
-                    if t_left.collidepoint(mx, my):
+                    if t_action == "left":
                         idx = (tnames.index(self.round_time) - 1) % len(tnames);
                         self.round_time = tnames[idx]
-                    elif t_right.collidepoint(mx, my):
+                    elif t_action == "right":
                         idx = (tnames.index(self.round_time) + 1) % len(tnames);
                         self.round_time = tnames[idx]
-                    elif s_left.collidepoint(mx, my):
+                    elif s_action == "left":
                         idx = (snames.index(self.target_score) - 1) % len(snames);
                         self.target_score = snames[idx]
-                    elif s_right.collidepoint(mx, my):
+                    elif s_action == "right":
                         idx = (snames.index(self.target_score) + 1) % len(snames);
                         self.target_score = snames[idx]
-                    elif th_left.collidepoint(mx, my):
+                    elif th_action == "left":
                         idx = (thnames.index(self.theme) - 1) % len(thnames);
                         self.theme = thnames[idx]
-                    elif th_right.collidepoint(mx, my):
+                    elif th_action == "right":
                         idx = (thnames.index(self.theme) + 1) % len(thnames);
                         self.theme = thnames[idx]
-                    elif b_left.collidepoint(mx, my):
+                    elif b_action == "left":
                         idx = (bnames.index(self.ball_color) - 1) % len(bnames);
                         self.ball_color = bnames[idx]
-                    elif b_right.collidepoint(mx, my):
+                    elif b_action == "right":
                         idx = (bnames.index(self.ball_color) + 1) % len(bnames);
                         self.ball_color = bnames[idx]
                     elif start_btn.collidepoint(mx, my):
@@ -487,10 +507,10 @@ class UIManager:
 
             self._draw_bg();
             draw()
-            self._draw_lr_arrows(t_left, t_right, mx, my)
-            self._draw_lr_arrows(s_left, s_right, mx, my)
-            self._draw_lr_arrows(th_left, th_right, mx, my)
-            self._draw_lr_arrows(b_left, b_right, mx, my)
+            self._draw_setting_box(t_rect, self.L("Время раунда:", "Round time:"), self.round_time, mx, my)
+            self._draw_setting_box(s_rect, self.L("Игра до:", "Play to:"), self.target_score, mx, my)
+            self._draw_setting_box(th_rect, self.L("Тема стола:", "Table theme:"), THEMES[self.theme]["name"], mx, my)
+            self._draw_setting_box(b_rect, self.L("Цвет мяча:", "Ball color:"), self.ball_color, mx, my)
             self._draw_button(self.L("СТАРТ", "START"), start_btn, start_btn.collidepoint(mx, my), (100, 255, 100))
             self._draw_button(self.L("НАЗАД", "BACK"), back_btn, back_btn.collidepoint(mx, my), (255, 100, 100))
             pygame.display.flip();
