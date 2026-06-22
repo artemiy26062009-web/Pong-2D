@@ -23,12 +23,13 @@ class Ball:
 
     def accelerate(self, dt):
         self.time_without_goal += dt
-        cs = abs(self.speed_x)
-        if cs < BALL_MAX_SPEED:
-            ns = SERVE_SPEED + self.acceleration * self.time_without_goal
-            ns = min(ns, BALL_MAX_SPEED)
-            self.speed_x = ns if self.speed_x > 0 else -ns
-            self.speed_y = ns if self.speed_y > 0 else -ns
+        current_speed = abs(self.speed_x)
+        if current_speed < BALL_MAX_SPEED:
+            # Плавно разгоняемся от 1.0 до BALL_MAX_SPEED
+            new_speed = 1.0 + self.acceleration * self.time_without_goal * 2
+            new_speed = min(new_speed, BALL_MAX_SPEED)
+            self.speed_x = new_speed if self.speed_x > 0 else -new_speed
+            self.speed_y = new_speed if self.speed_y > 0 else -new_speed
 
     def bounce_wall(self):
         if self.rect.top <= self.margin:
@@ -51,10 +52,12 @@ class Ball:
         return False
 
     def reset(self, direction):
+        """Медленная подача после гола с плавным ускорением"""
         self.rect.center = (WIDTH // 2, HEIGHT // 2)
-        self.base_speed = SERVE_SPEED
-        self.speed_x = SERVE_SPEED * direction
-        self.speed_y = SERVE_SPEED * random.choice((0.5, -0.5)) * 0.5
+        # Супер медленная начальная скорость
+        self.base_speed = 1.0  # почти стоит
+        self.speed_x = 1.0 * direction
+        self.speed_y = 0.3 * random.choice((0.5, -0.5))
         self.time_without_goal = 0
         self.trail.clear()
 

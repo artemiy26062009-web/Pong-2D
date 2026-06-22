@@ -1,8 +1,8 @@
-difficulty=hard
-theme=purple
-music_volume=0.05333333333333334
-sfx_volume=0.7266666666666667
-round_time=Бесконечно
+difficulty=easy
+theme=blue
+music_volume=0.08333333333333333
+sfx_volume=0.4533333333333333
+round_time=5 минут
 target_score=До 2
-ball_color=Жёлтый
+ball_color=Белый
 language=ru

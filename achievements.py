@@ -25,10 +25,18 @@ class Achievements:
 
     def unlock(self, name):
         if name in self.data and not self.data[name]:
-            self.data[name] = True;
-            self.save();
+            self.data[name] = True
+            self.save()
             return True
         return False
 
+    def get_unlocked(self):
+        """Возвращает список названий открытых достижений"""
+        return [name for name, unlocked in self.data.items() if unlocked]
+
     def get_all(self):
-        return [(n, ACHIEVEMENTS_LIST[n], self.data.get(n, False)) for n in ACHIEVEMENTS_LIST]
+        result = []
+        for name, info in ACHIEVEMENTS_LIST.items():
+            unlocked = self.data.get(name, False)
+            result.append((name, info, unlocked))
+        return result
