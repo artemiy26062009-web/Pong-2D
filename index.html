@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>PONG 2D — Download Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #080816;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .card {
+            background: #111130;
+            border: 2px solid #2a2a4a;
+            border-radius: 24px;
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            font-size: 70px;
+            color: #ffdc00;
+            letter-spacing: 5px;
+            margin-bottom: 5px;
+        }
+        .subtitle { color: #8888aa; font-size: 18px; margin-bottom: 5px; }
+        .subtitle-en { color: #6666aa; font-size: 14px; margin-bottom: 5px; }
+        .version { color: #555577; font-size: 13px; margin-bottom: 35px; font-style: italic; }
+        .btn {
+            display: inline-block;
+            padding: 18px 55px;
+            background: linear-gradient(135deg, #ffdc00, #e6a800);
+            color: #111;
+            font-size: 22px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: 0.3s;
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255, 200, 0, 0.4); }
+        .steps { color: #8888aa; font-size: 14px; margin-top: 25px; line-height: 2; }
+        .steps-en { color: #7777aa; font-size: 12px; margin-top: 5px; line-height: 2; }
+        .footer { color: #444466; font-size: 12px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>PONG 2D</h1>
+    <p class="subtitle">Классическая аркадная игра</p>
+    <p class="subtitle-en">Classic arcade game</p>
+    <p class="version">Версия 1.0 | Version 1.0 | Разработчик: Artox | Developer: Artox</p>
+
+    <a href="https://drive.google.com/uc?export=download&id=1bd1ZV5eTdbOpK7mxK8Bv0ZH9N7T9yb7U" class="btn">⬇ СКАЧАТЬ ИГРУ | DOWNLOAD</a>
+
+    <p class="steps">
+        1. Скачайте ZIP архив<br>
+        2. Распакуйте в любую папку<br>
+        3. Запустите <strong>PONG2D.exe</strong> и играйте!
+    </p>
+    <p class="steps-en">
+        1. Download ZIP archive<br>
+        2. Extract to any folder<br>
+        3. Run <strong>PONG2D.exe</strong> and play!
+    </p>
+    <p class="footer">Python + Pygame | Windows</p>
+</div>
+</body>
+</html>
