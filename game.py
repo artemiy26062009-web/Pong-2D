@@ -109,7 +109,7 @@ class Game:
                 "hits": "Ударов", "goals": "Счёт", "max_speed": "Макс. скорость",
                 "streak": "Лучшая серия", "time": "Время", "inf_text": "Бесконечно",
                 "back_to_menu": "ESC - Выйти в главное меню",
-                "back_to_settings": "ПРОБЕЛ - Вернуться к настройкам",
+                "back_to_settings": "ПРОБЕЛ - Вернуться к настройкам матча",
                 "tab_stats": "TAB - Статистика матча",
             }.get(key, key)
         else:
@@ -122,7 +122,7 @@ class Game:
                 "hits": "Hits", "goals": "Score", "max_speed": "Max speed",
                 "streak": "Best streak", "time": "Time", "inf_text": "Infinity",
                 "back_to_menu": "ESC - Return to main menu",
-                "back_to_settings": "SPACE - Return to settings",
+                "back_to_settings": "SPACE - Return to match settings",
                 "tab_stats": "TAB - Match statistics",
             }.get(key, key)
 

@@ -335,22 +335,22 @@ class UIManager:
         col_right_x = WIDTH // 2 + 20
 
         diff_left = [
-            pygame.Rect(col_left_x, 120, box_w, 70),
-            pygame.Rect(col_left_x, 200, box_w, 70),
+            pygame.Rect(col_left_x, 120, box_w, 70),  # Лёгкая
+            pygame.Rect(col_left_x, 200, box_w, 70),  # Нормальная
         ]
         diff_right = [
-            pygame.Rect(col_right_x, 120, box_w, 70),
-            pygame.Rect(col_right_x, 200, box_w, 70),
+            pygame.Rect(col_right_x, 120, box_w, 70),  # Сложная
+            pygame.Rect(col_right_x, 200, box_w, 70),  # Хардкор
         ]
 
-        set_w = 480
-        t_rect = pygame.Rect(WIDTH // 2 - set_w // 2, 290, set_w, 35)
-        s_rect = pygame.Rect(WIDTH // 2 - set_w // 2, 335, set_w, 35)
-        th_rect = pygame.Rect(WIDTH // 2 - set_w // 2, 380, set_w, 35)
-        b_rect = pygame.Rect(WIDTH // 2 - set_w // 2, 425, set_w, 35)
+        set_w = 500
+        t_rect = pygame.Rect(WIDTH // 2 - set_w // 2, 295, set_w, 38)
+        s_rect = pygame.Rect(WIDTH // 2 - set_w // 2, 343, set_w, 38)
+        th_rect = pygame.Rect(WIDTH // 2 - set_w // 2, 391, set_w, 38)
+        b_rect = pygame.Rect(WIDTH // 2 - set_w // 2, 439, set_w, 38)
 
-        back_btn = pygame.Rect(WIDTH // 2 - 260, 485, 240, 60)
-        start_btn = pygame.Rect(WIDTH // 2 + 20, 485, 240, 60)
+        back_btn = pygame.Rect(WIDTH // 2 - 260, 495, 240, 60)
+        start_btn = pygame.Rect(WIDTH // 2 + 20, 495, 240, 60)
 
         desc1 = {
             "easy": self.L("Медленный ИИ, часто ошибается", "Slow AI, often mistakes"),
@@ -372,12 +372,18 @@ class UIManager:
             self._draw_bg()
             self._draw_title(self.L("ИГРА С КОМПЬЮТЕРОМ", "PLAYER vs COMPUTER"), 1)
             dn = DIFFICULTY_SETTINGS[self.difficulty]['name_' + self.language].upper()
-            self._draw_subtitle(self.L(f"СЛОЖНОСТЬ: {dn}", f"DIFFICULTY: {dn}"), 65, (255, 100, 100))
+            self._draw_subtitle(self.L(f"СЛОЖНОСТЬ: {dn}", f"DIFFICULTY: {dn}"), 65, dcol[self.difficulty])
 
+            # Левая колонка (Лёгкая, Нормальная)
             for i, diff in enumerate(dnames[:2]):
                 r = diff_left[i]
-                pygame.draw.rect(self.screen, (25, 25, 45), r, border_radius=8)
-                pygame.draw.rect(self.screen, dcol[diff], r, 2, border_radius=8)
+                selected = (self.difficulty == diff)
+                if selected:
+                    pygame.draw.rect(self.screen, (25, 25, 45), r, border_radius=8)
+                    pygame.draw.rect(self.screen, dcol[diff], r, 3, border_radius=8)
+                else:
+                    pygame.draw.rect(self.screen, (25, 25, 45), r, border_radius=8)
+                    pygame.draw.rect(self.screen, (60, 60, 100), r, 2, border_radius=8)
                 name_s = self.font_small.render(DIFFICULTY_SETTINGS[diff]["name_" + self.language], True, dcol[diff])
                 d1_s = self.font_tiny.render(desc1[diff], True, (180, 180, 200))
                 d2_s = self.font_tiny.render(desc2[diff], True, (150, 150, 170))
@@ -385,10 +391,16 @@ class UIManager:
                 self.screen.blit(d1_s, (r.centerx - d1_s.get_width() // 2, r.y + 26))
                 self.screen.blit(d2_s, (r.centerx - d2_s.get_width() // 2, r.y + 46))
 
+            # Правая колонка (Сложная, Хардкор)
             for i, diff in enumerate(dnames[2:]):
                 r = diff_right[i]
-                pygame.draw.rect(self.screen, (25, 25, 45), r, border_radius=8)
-                pygame.draw.rect(self.screen, dcol[diff], r, 2, border_radius=8)
+                selected = (self.difficulty == diff)
+                if selected:
+                    pygame.draw.rect(self.screen, (25, 25, 45), r, border_radius=8)
+                    pygame.draw.rect(self.screen, dcol[diff], r, 3, border_radius=8)
+                else:
+                    pygame.draw.rect(self.screen, (25, 25, 45), r, border_radius=8)
+                    pygame.draw.rect(self.screen, (60, 60, 100), r, 2, border_radius=8)
                 name_s = self.font_small.render(DIFFICULTY_SETTINGS[diff]["name_" + self.language], True, dcol[diff])
                 d1_s = self.font_tiny.render(desc1[diff], True, (180, 180, 200))
                 d2_s = self.font_tiny.render(desc2[diff], True, (150, 150, 170))
